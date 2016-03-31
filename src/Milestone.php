@@ -89,9 +89,12 @@ class Milestone extends Model
      *
      * @return TeamWorkPm\Response\Model
      */
-    public function getAll($filter = 'all')
+    public function getAll(array $params = [], $pageSize = 200, $page = 1)
     {
-        return $this->rest->get("$this->action", $this->getParams($filter));
+        $params['find']     = isset($params['find']) ? $params['find'] : 'all';
+        $params['pageSize'] = $pageSize;
+		$params['page']     = $page;
+        return $this->rest->get("$this->action", $params);
     }
 
     /**

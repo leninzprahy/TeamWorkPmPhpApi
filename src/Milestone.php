@@ -1,4 +1,6 @@
-<?php namespace TeamWorkPm;
+<?php
+
+namespace TeamWorkPm;
 
 class Milestone extends Model
 {
@@ -53,8 +55,11 @@ class Milestone extends Model
      * PUT /milestones/#{id}/complete.xml
      *
      * Marks the specified milestone as complete. Returns Status 200 OK.
+     *
      * @param int $id
+     *
      * @return bool
+     * @throws \TeamWorkPm\Exception
      */
     public function complete($id)
     {
@@ -73,7 +78,9 @@ class Milestone extends Model
      * Marks the specified milestone as uncomplete. Returns Status 200 OK.
      *
      * @param int $id
+     *
      * @return bool
+     * @throws \TeamWorkPm\Exception
      */
     public function uncomplete($id)
     {
@@ -87,7 +94,10 @@ class Milestone extends Model
     /**
      * Get all milestone
      *
-     * @return TeamWorkPm\Response\Model
+     * @param string $filter
+     *
+     * @return \TeamWorkPm\Response\Model
+     * @throws \TeamWorkPm\Exception
      */
     public function getAll(array $params = [], $pageSize = 200, $page = 1)
     {
@@ -100,7 +110,11 @@ class Milestone extends Model
     /**
      * Get all milestone
      *
-     * @return TeamWorkPm\Response\Model
+     * @param $project_id
+     * @param string $filter
+     *
+     * @return \TeamWorkPm\Response\Model
+     * @throws \TeamWorkPm\Exception
      */
     public function getByProject($project_id, $filter = 'all')
     {
@@ -114,6 +128,12 @@ class Milestone extends Model
         );
     }
 
+    /**
+     * @param $filter
+     *
+     * @return array
+     * @throws \TeamWorkPm\Exception
+     */
     private function getParams($filter)
     {
         $params = [];
@@ -132,9 +152,10 @@ class Milestone extends Model
     }
 
     /**
-     *
      * @param array $data
+     *
      * @return int
+     * @throws \TeamWorkPm\Exception
      */
     public function insert(array $data)
     {

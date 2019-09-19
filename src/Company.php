@@ -1,4 +1,6 @@
-<?php namespace TeamWorkPm;
+<?php
+
+namespace TeamWorkPm;
 
 class Company extends Model
 {
@@ -259,17 +261,15 @@ class Company extends Model
      * GET /companies.xml
      *
      * The requesting user is returned a list of companies available to them.
+     *
+     * @param array $params
      * 
-     * @param $pageSize int
-     * @param $page int
-     * @return array|SimpleXMLElement
+     * @return \TeamWorkPm\Response\Model
+     * @throws \TeamWorkPm\Exception
      */
-    public function getAll($pageSize = 200, $page = 1)
+    public function getAll(array $params = [])
     {
-        return $this->rest->get($this->action, [
-            'pageSize' => $pageSize,
-            'page' => $page
-        ]);
+        return $this->rest->get($this->action, $params);
     }
 
     /**
@@ -279,8 +279,10 @@ class Company extends Model
      *
      * All of the companies within the specified project are returned
      *
-     * @param int $id
-     * @return TeamWorkPm\Response\Model
+     * @param $project_id
+     *
+     * @return \TeamWorkPm\Response\Model
+     * @throws \TeamWorkPm\Exception
      */
     public function getByProject($project_id)
     {

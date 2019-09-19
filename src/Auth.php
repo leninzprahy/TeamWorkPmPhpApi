@@ -1,29 +1,55 @@
-<?php namespace TeamWorkPm;
+<?php
+
+namespace TeamWorkPm;
 
 class Auth
 {
-    private static $_config = [
-        'company' => null,
-        'key'     => null
+    private static $url = 'https://authenticate.teamwork.com/';
+
+    private static $config = [
+        'url' => null,
+        'key' => null
     ];
+
+    private static $is_subdomain = false;
 
     public static function set()
     {
         $num_args = func_num_args();
         if ($num_args === 1) {
-            self::$_config['company'] = 'authenticate';
-            self::$_config['key']     = func_get_arg(0);
-            $account       = Factory::build('account');
-            $authenticate  = $account->authenticate();
-            self::$_config['company'] = $authenticate->code;
-        } elseif($num_args === 2) {
-            self::$_config['company'] = func_get_arg(0);
-            self::$_config['key']     = func_get_arg(1);
+            self::$config['url'] = self::$url;
+            self::$config['key'] = func_get_arg(0);
+            self::$config['url'] = Factory::build('account')->authenticate()->url;
+        } elseif ($num_args === 2) {
+            self::$config['url'] = $url = func_get_arg(0);
+            self::checkSubDomain($url);
+            if (self::$is_subdomain) {
+                self::$config['url'] = self::$url;
+            }
+            self::$config['key']  = func_get_arg(1);
+            if (self::$is_subdomain) {
+                $test = Factory::build('account')->authenticate();
+                $url = $test->url;
+            }
+            self::$config['url'] = $url;
         }
     }
 
     public static function get()
     {
-        return array_values(self::$_config);
+        return array_values(self::$config);
+    }
+
+    private static function checkSubDomain($url)
+    {
+        $eu_domain = strpos($url, '.eu');
+
+        if ($eu_domain !== false) {
+            self::$url = 'https://authenticate.eu.teamwork.com/';
+            $url = substr($url, 0, $eu_domain);
+        }
+        if (strpos($url, '.') === false) {
+            self::$is_subdomain = true;
+        }
     }
 }

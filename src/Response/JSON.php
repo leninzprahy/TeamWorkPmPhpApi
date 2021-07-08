@@ -145,7 +145,7 @@ class JSON extends Model
                 $key = strtolower($key);
             }
             $key = Str::camel($key);
-            $destination->$key = is_scalar($value) ? $value : self::camelizeObject($value);
+            $destination->$key = is_scalar($value) ? $value : self::camelizeObject((array) $value);
         }
         return $destination;
     }
